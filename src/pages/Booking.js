@@ -17,7 +17,6 @@ function Booking() {
     { name: "Washing Machine Repair", price: 280, image: "https://cdn-icons-png.flaticon.com/512/1048/1048943.png" },
     { name: "Refrigerator Repair", price: 320, image: "https://cdn-icons-png.flaticon.com/512/3050/3050155.png" },
     { name: "RO Water Purifier Technician", price: 260, image: "https://cdn-icons-png.flaticon.com/512/869/869869.png" },
-    { name: "Painter", price: 400, image: "https://cdn-icons-png.flaticon.com/512/3096/3096673.png" },
     { name: "CCTV Installation Technician", price: 500, image: "https://cdn-icons-png.flaticon.com/512/483/483408.png" },
     { name: "Solar Panel Technician", price: 600, image: "https://cdn-icons-png.flaticon.com/512/4149/4149673.png" },
 
@@ -97,10 +96,28 @@ function Booking() {
               borderRadius: "12px",
               cursor: "pointer",
               backgroundColor: "white",
-              boxShadow: "0 4px 10px rgba(0,0,0,0.1)"
+              boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
+              textAlign: "center"
             }}
           >
-            <img src={service.image} alt={service.name} style={{ width: "60px" }} />
+           <div style={{
+  width: "70px",
+  height: "70px",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  margin: "0 auto 10px auto"
+}}>
+  <img
+    src={service.image}
+    alt={service.name}
+    style={{
+      maxWidth: "100%",
+      maxHeight: "100%",
+      objectFit: "contain"
+    }}
+  />
+</div>
             <h4>{service.name}</h4>
             <p>₹{service.price}</p>
           </div>

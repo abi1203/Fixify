@@ -5,21 +5,16 @@ function Login() {
 
   const navigate = useNavigate();
 
-  const [isLogin, setIsLogin] = useState(true);
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
   const [errors, setErrors] = useState({});
 
   const [form, setForm] = useState({
-    name: "",
-    phone: "",
     email: "",
-    address: "",
-    dob: "",
     password: ""
   });
 
-  // ✅ Add gradient animation only once
+  // gradient animation
   useEffect(() => {
     const styleSheet = document.styleSheets[0];
     styleSheet.insertRule(`
@@ -33,95 +28,77 @@ function Login() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
     setForm({ ...form, [name]: value });
+
     validateField(name, value);
   };
 
   const validateField = (name, value) => {
+
     let errorMsg = "";
 
-    if (name === "name") {
-      if (!/^[A-Za-z ]{3,}$/.test(value))
-        errorMsg = "Name must contain only letters (min 3 characters)";
+    if (name === "email") {
+
+      if (!value.trim()) {
+        errorMsg = "Email or Phone required";
+      }
+
     }
 
-    if (name === "phone" && !/^[0-9]{10}$/.test(value))
-      errorMsg = "Phone must be 10 digits";
+    if (name === "password") {
 
-    if (name === "email" && !/^\S+@\S+\.\S+$/.test(value))
-      errorMsg = "Invalid Email";
+      if (value.length < 6) {
+        errorMsg = "Min 6 characters required";
+      }
 
-    if (name === "address" && !value.trim())
-      errorMsg = "Address required";
-
-    if (name === "dob" && !value)
-      errorMsg = "Select DOB";
-
-    if (name === "password" && value.length < 6)
-      errorMsg = "Min 6 characters required";
+    }
 
     setErrors((prev) => ({
       ...prev,
       [name]: errorMsg
     }));
+
   };
 
   const handleSubmit = () => {
 
-    if (isLogin) {
+    const savedUser = JSON.parse(localStorage.getItem("user"));
 
-      const savedUser = JSON.parse(localStorage.getItem("user"));
+    if (!savedUser) {
+      setMessage("No account found. Please Signup first.");
+      setMessageType("error");
+      return;
+    }
 
-      if (!savedUser) {
-        setMessage("No account found. Please Signup first.");
-        setMessageType("error");
-        return;
-      }
+    if (
+      (form.email === savedUser.email ||
+        form.email === savedUser.phone) &&
+      form.password === savedUser.password
+    ) {
 
-      if (
-        (form.email === savedUser.email ||
-          form.email === savedUser.phone) &&
-        form.password === savedUser.password
-      ) {
+      localStorage.setItem("isAuth", "true");
 
-        localStorage.setItem("isAuth", "true");
-
-        setMessage("Login Successful ✅");
-        setMessageType("success");
-
-        setTimeout(() => {
-          navigate("/booking");
-        }, 1500);
-
-      } else {
-        setMessage("Invalid Credentials ❌");
-        setMessageType("error");
-      }
-
-    } else {
-
-      const hasErrors = Object.values(errors).some((err) => err);
-      const hasEmpty = Object.values(form).some((val) => !val);
-
-      if (hasErrors || hasEmpty) {
-        setMessage("Please correct the errors before submitting");
-        setMessageType("error");
-        return;
-      }
-
-      localStorage.setItem("user", JSON.stringify(form));
-
-      setMessage("Signup Successful 🎉");
+      setMessage("Login Successful ✅");
       setMessageType("success");
 
       setTimeout(() => {
-        setIsLogin(true);
+        navigate("/booking");
       }, 1500);
+
+    } else {
+
+      setMessage("Invalid Credentials ❌");
+      setMessageType("error");
+
     }
+
   };
 
   const renderInput = (name, placeholder, type = "text") => (
+
     <div style={{ marginBottom: "15px", position: "relative" }}>
+
       <input
         type={type}
         name={name}
@@ -140,68 +117,110 @@ function Login() {
           outline: "none"
         }}
       />
+
       {form[name] && !errors[name] && (
-        <span style={{
-          position: "absolute",
-          right: "10px",
-          top: "10px",
-          color: "green",
-          fontWeight: "bold"
-        }}>✓</span>
+
+        <span
+          style={{
+            position: "absolute",
+            right: "10px",
+            top: "10px",
+            color: "green",
+            fontWeight: "bold"
+          }}
+        >
+          ✓
+        </span>
+
       )}
+
       {errors[name] && (
-        <small style={{ color: "red" }}>{errors[name]}</small>
+
+        <small style={{ color: "red" }}>
+          {errors[name]}
+        </small>
+
       )}
+
     </div>
+
   );
 
   return (
+
     <div style={outerStyle}>
+
       <div style={cardStyle}>
 
         <h1 style={{ textAlign: "center", color: "#8d63ff" }}>
           Fixify 🔧
         </h1>
 
-        {/* ✅ MESSAGE BOX */}
         {message && (
-          <div style={{
-            marginBottom: "15px",
-            padding: "10px",
-            borderRadius: "8px",
-            backgroundColor: messageType === "success" ? "#d4edda" : "#f8d7da",
-            color: messageType === "success" ? "#155724" : "#721c24"
-          }}>
+
+          <div
+            style={{
+              marginBottom: "15px",
+              padding: "10px",
+              borderRadius: "8px",
+              backgroundColor:
+                messageType === "success"
+                  ? "#d4edda"
+                  : "#f8d7da",
+              color:
+                messageType === "success"
+                  ? "#155724"
+                  : "#721c24"
+            }}
+          >
+
             {message}
+
           </div>
+
         )}
 
-        <div style={{ textAlign: "center", marginBottom: "20px" }}>
-          <button onClick={() => setIsLogin(true)} style={toggleBtn(isLogin)}>Login</button>
-          <button onClick={() => setIsLogin(false)} style={toggleBtn(!isLogin)}>Signup</button>
+        {/* Login / Signup Buttons */}
+
+        <div
+          style={{
+            textAlign: "center",
+            marginBottom: "20px"
+          }}
+        >
+
+          <button
+            style={toggleBtn(true)}
+          >
+            Login
+          </button>
+
+          <button
+            onClick={() => navigate("/signup")}
+            style={toggleBtn(false)}
+          >
+            Signup
+          </button>
+
         </div>
 
-        {!isLogin && (
-          <>
-            {renderInput("name", "Full Name")}
-            {renderInput("phone", "Phone Number")}
-            {renderInput("email", "Email")}
-            {renderInput("address", "Address")}
-            {renderInput("dob", "Date of Birth", "date")}
-          </>
-        )}
-
-        {isLogin && renderInput("email", "Email or Phone")}
+        {renderInput("email", "Email or Phone")}
 
         {renderInput("password", "Password", "password")}
 
-        <button onClick={handleSubmit} style={mainBtn}>
-          {isLogin ? "Login" : "Create Account"}
+        <button
+          onClick={handleSubmit}
+          style={mainBtn}
+        >
+          Login
         </button>
 
       </div>
+
     </div>
+
   );
+
 }
 
 const outerStyle = {
@@ -209,7 +228,8 @@ const outerStyle = {
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
-  background: "linear-gradient(-45deg, #1e3c72, #2a5298, #00c6ff, #0072ff)",
+  background:
+    "linear-gradient(-45deg, #1e3c72, #2a5298, #00c6ff, #0072ff)",
   backgroundSize: "400% 400%",
   animation: "gradientMove 4s ease forwards"
 };
