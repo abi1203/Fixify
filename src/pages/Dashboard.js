@@ -1,5 +1,8 @@
 import { useState } from "react";
-import Home from "./Home";
+import DashboardHome from "./Dashboardhome";
+import DashboardSearch from "./DashboardSearch";
+import DashboardCategories from "./DashboardCategories";
+import DashboardOrders from "./DashboardOrders";
 
 function Dashboard(){
 
@@ -7,81 +10,43 @@ const [activeTab,setActiveTab] = useState("home");
 
 return(
 
-<div style={{paddingBottom:"70px"}}>
+<div style={{paddingBottom:"80px"}}>
 
 <h2 style={{textAlign:"center"}}>Fixify Dashboard 🔧</h2>
 
 {/* CONTENT AREA */}
 
-{activeTab === "home" && (
-<Home />
-)}
+{activeTab === "home" && <DashboardHome />}
 
-{activeTab === "search" && (
+{activeTab === "search" && <DashboardSearch />}
 
-<div style={{padding:"20px"}}>
+{activeTab === "categories" && <DashboardCategories />}
 
-<h3>Search Technician</h3>
-
-<input
-placeholder="Search plumber, electrician..."
-style={{padding:"10px",width:"100%"}}
-/>
-
-</div>
-
-)}
-
-{activeTab === "categories" && (
-
-<div style={{padding:"20px"}}>
-
-<h3>Categories</h3>
-
-<p>🏠 Home Services</p>
-<p>🚗 Vehicle Services</p>
-<p>🧹 Cleaning</p>
-<p>📺 Electronics Repair</p>
-
-</div>
-
-)}
-
-{activeTab === "orders" && (
-
-<div style={{padding:"20px"}}>
-
-<h3>My Orders</h3>
-
-<p>No orders yet</p>
-
-</div>
-
-)}
+{activeTab === "orders" && <DashboardOrders />}
 
 {/* BOTTOM NAVBAR */}
 
-<div style={{
+<div style={bottomNav}>
 
-position:"fixed",
-bottom:"0",
-left:"0",
-width:"100%",
-display:"flex",
-justifyContent:"space-around",
-background:"white",
-borderTop:"1px solid #ccc",
-padding:"10px"
+<button style={navBtn} onClick={()=>setActiveTab("home")}>
+<span style={{fontSize:"22px"}}>🏠</span>
+<p style={{margin:"2px 0"}}>Home</p>
+</button>
 
-}}>
+<button style={navBtn} onClick={()=>setActiveTab("search")}>
+<span style={{fontSize:"22px"}}>🔍</span>
+<p style={{margin:"2px 0"}}>Search</p>
+</button>
 
-<button onClick={()=>setActiveTab("home")}>🏠 Home</button>
+<button style={navBtn} onClick={()=>setActiveTab("categories")}>
+<span style={{fontSize:"22px"}}>📂</span>
+<p style={{margin:"2px 0"}}>Categories</p>
+</button>
 
-<button onClick={()=>setActiveTab("search")}>🔍 Search</button>
-
-<button onClick={()=>setActiveTab("categories")}>📂 Categories</button>
-
-<button onClick={()=>setActiveTab("orders")}>📦 Orders</button>
+<button style={navBtn} onClick={()=>setActiveTab("orders")}>
+<span style={{fontSize:"22px"}}>📦</span>
+<p style={{margin:"2px 0"}}>Orders</p>
+</button>
 
 </div>
 
@@ -89,6 +54,30 @@ padding:"10px"
 
 );
 
+}
+
+const bottomNav = {
+position:"fixed",
+bottom:"0",
+left:"0",
+width:"100%",
+background:"white",
+borderTop:"1px solid #ddd",
+display:"flex",
+justifyContent:"space-around",
+padding:"8px 0",
+boxShadow:"0 -2px 10px rgba(0,0,0,0.1)"
+}
+
+const navBtn = {
+display:"flex",
+flexDirection:"column",
+alignItems:"center",
+background:"none",
+border:"none",
+cursor:"pointer",
+fontSize:"14px",
+color:"#333"
 }
 
 export default Dashboard;

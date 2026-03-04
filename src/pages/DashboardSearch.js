@@ -1,11 +1,11 @@
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-function Home() {
+function DashboardSearch(){
 
-  const navigate = useNavigate();
+const navigate = useNavigate();
 
-  // ✅ All const must be here (before return)
-  const categories = {
+const categories = {
 
   "Home Services": [
     { name: "Plumber", image: "https://cdn-icons-png.flaticon.com/512/1995/1995470.png" },
@@ -58,72 +58,93 @@ function Home() {
 
 };
 
-  return (
-    <div style={{ fontFamily: "Arial, sans-serif" }}>
+const [search,setSearch] = useState("");
 
-      {/* Navbar */}
-      <div style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        backgroundColor: "#4f46e5",
-        padding: "15px 60px",
-        color: "white"
-      }}>
-        <h2 style={{ margin: 0 }}>Fixify</h2>
+/* 🔹 categories -> single services list */
+const services = Object.values(categories).flat();
 
-        <div>
-          <button onClick={() => navigate("/login")}>Login</button>
-          <button onClick={() => navigate("/login")}>Signup</button>
-        </div>
-      </div>
+/* 🔹 search filter */
+const filteredServices = services.filter(service =>
+service.name.toLowerCase().includes(search.toLowerCase())
+);
 
-      {/* Categories */}
-      <div style={{ padding: "40px" }}>
-        {Object.keys(categories).map((category, index) => (
-          <div key={index}>
-            <h2>{category}</h2>
+return(
 
-            <div style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-              gap: "20px"
-            }}>
-              {categories[category].map((tech, i) => (
-                <div
-                  key={i}
-                  onClick={() => navigate("/login")}
-                  style={{
-                    border: "1px solid #ddd",
-                    padding: "20px",
-                    textAlign: "center",
-                    borderRadius: "12px",
-                    cursor: "pointer",
-                    transition: "0.3s"
-                  }}
-                  onMouseOver={(e) =>
-                    e.currentTarget.style.transform = "scale(1.05)"
-                  }
-                  onMouseOut={(e) =>
-                    e.currentTarget.style.transform = "scale(1)"
-                  }
-                >
-                  <img
-                    src={tech.image}
-                    alt={tech.name}
-                    style={{ width: "70px", marginBottom: "15px" }}
-                  />
-                  <h4>{tech.name}</h4>
-                </div>
-              ))}
-            </div>
+<div style={{padding:"20px"}}>
 
-          </div>
-        ))}
-      </div>
+<h2>Search Technician</h2>
 
-    </div>
-  );
+<input
+type="text"
+placeholder="Search plumber, electrician..."
+value={search}
+onChange={(e)=>setSearch(e.target.value)}
+style={input}
+/>
+
+<br/><br/>
+
+<div style={grid}>
+
+{filteredServices.map((service,index)=>(
+
+<div key={index} style={card}>
+
+<img src={service.image} alt="" style={{width:"70px"}}/>
+
+<h4>{service.name}</h4>
+
+<button
+style={btn}
+onClick={()=>navigate("/booking")}
+>
+Book Now
+</button>
+
+</div>
+
+))}
+
+</div>
+
+{filteredServices.length === 0 && (
+<p>No services found 😔</p>
+)}
+
+</div>
+
+);
+
 }
 
-export default Home;
+const grid={
+display:"grid",
+gridTemplateColumns:"repeat(auto-fit,minmax(180px,1fr))",
+gap:"20px"
+}
+
+const card={
+border:"1px solid #ddd",
+borderRadius:"10px",
+padding:"20px",
+textAlign:"center",
+background:"white"
+}
+
+const input={
+width:"100%",
+padding:"10px",
+borderRadius:"6px",
+border:"1px solid #ccc"
+}
+
+const btn={
+background:"#4f46e5",
+color:"white",
+border:"none",
+padding:"8px 12px",
+borderRadius:"6px",
+cursor:"pointer"
+}
+
+export default DashboardSearch;
