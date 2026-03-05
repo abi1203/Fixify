@@ -73,7 +73,8 @@ return(
 <div
 key={i}
 style={card}
-onClick={()=>navigate("/booking",{state:service})}
+
+onClick={()=>navigate(`/service/${service.name}`)}
 >
 
 <img src={service.image} alt="" style={{width:"70px"}}/>

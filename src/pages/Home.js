@@ -1,8 +1,19 @@
+import React, {useEffect,useState} from "react";
 import { useNavigate } from "react-router-dom";
+
 
 function Home() {
 
   const navigate = useNavigate();
+  const [providers,setProviders] = useState([]);
+
+useEffect(()=>{
+
+fetch("http://localhost:8086/providers")
+.then(res=>res.json())
+.then(data=>setProviders(data));
+
+},[]);
 
   // ✅ All const must be here (before return)
   const categories = {
@@ -59,71 +70,92 @@ function Home() {
 };
 
   return (
-    <div style={{ fontFamily: "Arial, sans-serif" }}>
+  <div style={{ fontFamily: "Arial, sans-serif" }}>
 
-      {/* Navbar */}
-      <div style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        backgroundColor: "#4f46e5",
-        padding: "15px 60px",
-        color: "white"
-      }}>
-        <h2 style={{ margin: 0 }}>Fixify</h2>
+    {/* Navbar */}
+    <div style={{
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      backgroundColor: "#4f46e5",
+      padding: "15px 60px",
+      color: "white"
+    }}>
+      <h2 style={{ margin: 0 }}>Fixify</h2>
 
-        <div>
-          <button onClick={() => navigate("/login")}>Login</button>
-          <button onClick={() => navigate("/login")}>Signup</button>
-        </div>
+      <div>
+        <button onClick={() => navigate("/login")}>Login</button>
+        <button onClick={() => navigate("/signup")}>Signup</button>
       </div>
+    </div>
 
-      {/* Categories */}
-      <div style={{ padding: "40px" }}>
-        {Object.keys(categories).map((category, index) => (
-          <div key={index}>
-            <h2>{category}</h2>
+    {/* Categories */}
+    <div style={{ padding: "40px" }}>
+      {Object.keys(categories).map((category, index) => (
+        <div key={index}>
+          <h2>{category}</h2>
 
-            <div style={{
+          <div
+            style={{
               display: "grid",
               gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
               gap: "20px"
-            }}>
-              {categories[category].map((tech, i) => (
-                <div
-                  key={i}
-                  onClick={() => navigate("/login")}
-                  style={{
-                    border: "1px solid #ddd",
-                    padding: "20px",
-                    textAlign: "center",
-                    borderRadius: "12px",
-                    cursor: "pointer",
-                    transition: "0.3s"
-                  }}
-                  onMouseOver={(e) =>
-                    e.currentTarget.style.transform = "scale(1.05)"
-                  }
-                  onMouseOut={(e) =>
-                    e.currentTarget.style.transform = "scale(1)"
-                  }
-                >
-                  <img
-                    src={tech.image}
-                    alt={tech.name}
-                    style={{ width: "70px", marginBottom: "15px" }}
-                  />
-                  <h4>{tech.name}</h4>
-                </div>
-              ))}
-            </div>
-
+            }}
+          >
+            {categories[category].map((tech, i) => (
+              <div
+                key={i}
+                onClick={() => navigate("/login")}
+                style={{
+                  border: "1px solid #ddd",
+                  padding: "20px",
+                  textAlign: "center",
+                  borderRadius: "12px",
+                  cursor: "pointer",
+                  transition: "0.3s"
+                }}
+                onMouseOver={(e) =>
+                  (e.currentTarget.style.transform = "scale(1.05)")
+                }
+                onMouseOut={(e) =>
+                  (e.currentTarget.style.transform = "scale(1)")
+                }
+              >
+                <img
+                  src={tech.image}
+                  alt={tech.name}
+                  style={{ width: "70px", marginBottom: "15px" }}
+                />
+                <h4>{tech.name}</h4>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-
+        </div>
+      ))}
     </div>
-  );
-}
 
+    {/* Providers from Backend */}
+    <div style={{ padding: "40px" }}>
+      <h2>Available Technicians</h2>
+
+      {providers.map((p) => (
+        <div
+          key={p.id}
+          style={{
+            border: "1px solid gray",
+            margin: "10px",
+            padding: "10px",
+            borderRadius: "8px"
+          }}
+        >
+          <h3>{p.name}</h3>
+          <p>{p.service_type}</p>
+          <p>{p.city}</p>
+        </div>
+      ))}
+    </div>
+
+  </div>
+);
+}
 export default Home;

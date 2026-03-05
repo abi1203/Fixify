@@ -1,9 +1,13 @@
-import { useState } from "react";
+
+  import { useState } from "react";
+ import { useLocation } from "react-router-dom";
 
 function Booking() {
 
   // 🔹 State Section
   const [selectedService, setSelectedService] = useState(null);
+    const location = useLocation();
+ const provider = location.state;
   const [address, setAddress] = useState("");
   const [addressError, setAddressError] = useState("");
 
@@ -76,6 +80,14 @@ function Booking() {
     <div style={{ padding: "40px", textAlign: "center" }}>
 
       <h2>Book a Service 🔧</h2>
+      {provider && (
+  <div style={{marginTop:"20px"}}>
+    <h3>Technician Details</h3>
+    <p>Name: {provider.name}</p>
+    <p>City: {provider.city}</p>
+    <p>Service: {provider.serviceType}</p>
+  </div>
+)}
 
       {/* Service Grid */}
       <div style={{
